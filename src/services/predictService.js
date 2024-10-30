@@ -17,6 +17,6 @@ export const predictImage = async (image, filename) => {
     const imagePath = path.join(__dirname, `/uploads/${filename}`);
 
     const imageBuffer = fs.readFileSync(imagePath);
-    const preprocessedImg = tfjs.node.decodeImage(imageBuffer).resizeNearestNeighbor([224, 224]).expandDims().toFloat();
-    return model.predict(preprocessedImg).data()
+    const preprocessedImg = tfjs.node.decodeImage(imageBuffer, 3).resizeNearestNeighbor([224, 224]).expandDims().toFloat();
+    return model.predict(preprocessedImg).dataSync();
 };
