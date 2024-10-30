@@ -1,6 +1,7 @@
-import { loadModel, predictImage } from "../services/predictService.js";
+// import { loadModel } from "../model.js";
+import { predictImage } from "../services/predictService.js";
 
-const predictController = (req, res) => {
+const predictController = async (req, res) => {
     // terima form data image
     if (!req.file) {
         return res.status(400).json({ message: 'No file uploaded' });
@@ -17,7 +18,7 @@ const predictController = (req, res) => {
         })
     }
 
-    if (mimetype !== "image/jpeg" || mimetype !== "image/png" || mimetype !== "image/jpg") {
+    if (mimetype !== "image/jpeg" && mimetype !== "image/png" && mimetype !== "image/jpg") {
         res.status(400).send({
             "status": "fail",
             "message": "Terjadi kesalahan dalam melakukan prediksi"
@@ -30,9 +31,11 @@ const predictController = (req, res) => {
     // const bucketName = "";
     // const filePath = "";
 
-    const theModel = loadModel();
+    const imageFileName = req.imageFileName;
 
-    predictImage(theModel, image);
+    const pred = await predictImage(image, imageFileName);
+
+    res.send(pred);
 }
 
 export default predictController;
