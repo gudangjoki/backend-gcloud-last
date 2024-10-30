@@ -3,7 +3,7 @@ import predictController from "./handler/predictController.js";
 import historyController from "./handler/historyController.js";
 import multer from "multer";
 import { v4 as uuidv4 } from 'uuid';
-import { loadModel } from "./services/predictService.js";
+import { loadModel } from "./model.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
