@@ -10,6 +10,8 @@ const upload = multer({ dest: 'uploads/' });
 
 app.post('/predict', upload.single('image'), predictController);
 
+app.get('/predict/history', historyController);
+
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });

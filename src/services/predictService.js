@@ -1,5 +1,4 @@
 import tfjs from "@tensorflow/tfjs-node";
-const { Storage } = require("@google-cloud/storage");
 
 export const loadModel = () => {
     const model = "./models/model.json";
