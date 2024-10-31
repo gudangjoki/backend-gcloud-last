@@ -1,22 +1,20 @@
-import tfjs from "@tensorflow/tfjs-node";
+import tf from "@tensorflow/tfjs-node";
 import fs from 'fs';
 import __dirname from "../../path.mjs";
 import path from "path";
 
-// export const loadModel = () => {
-//     const model = "./models/model.json";
-//     return tfjs.loadLayersModel(model);
-// };
-
-export const predictImage = async (image, filename) => {
-
-    const modelPath = "file:///home/ujus/Desktop/dev-dicoding/backend-gcloud-last/src/models/model.json";
-    const model = await tfjs.node.loadSavedModel(modelPath);
+export const predictImage = async (image, filename, model) => {
 
     console.log(__dirname);
     const imagePath = path.join(__dirname, `/uploads/${filename}`);
 
     const imageBuffer = fs.readFileSync(imagePath);
-    const preprocessedImg = tfjs.node.decodeImage(imageBuffer, 3).resizeNearestNeighbor([224, 224]).expandDims().toFloat();
-    return model.predict(preprocessedImg).dataSync();
+    console.log(imageBuffer)
+    const preprocessedImg = tf.node.decodeImage(imageBuffer, 3)
+    .resizeNearestNeighbor([224, 224])
+    .expandDims(0)
+    .toFloat()
+    .div(tf.scalar(255.0));
+
+    return model.predict(preprocessedImg).data();
 };

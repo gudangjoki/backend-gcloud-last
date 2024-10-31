@@ -1,5 +1,5 @@
-// import { loadModel } from "../model.js";
 import { predictImage } from "../services/predictService.js";
+import { v4 as uuidv4 } from 'uuid';
 
 const predictController = async (req, res, model) => {
     // terima form data image
@@ -19,7 +19,7 @@ const predictController = async (req, res, model) => {
             })
         }
     
-        if (mimetype !== "image/jpeg" && mimetype !== "image/png" && mimetype !== "image/jpg") {
+        if (mimetype !== "image/png") {
             res.status(400).send({
                 "status": "fail",
                 "message": "Terjadi kesalahan dalam melakukan prediksi"
@@ -31,12 +31,23 @@ const predictController = async (req, res, model) => {
         // save ke model bucket di gcp
         // const bucketName = "";
         // const filePath = "";
-    
+
+        console.log('buffer: ', req.file);
     
         const result = await predictImage(image, req.imageFileName, model);
         const prediction = result[0] > 0.5 ? "Cancer" : "Non-cancer";
-        
-        res.json({ result: prediction });
+        const responseObj = {
+            'status': 'success',
+            'message': 'Model is predicted successfully',
+            'data': {
+                'id': uuidv4(),
+                'result': prediction,
+                'suggestion': prediction === 'Cancer' ? 'Segera periksa ke dokter!' : 'Penyakit kanker tidak terdeteksi.',
+                'createdAt': new Date().toISOString(),
+            }
+        }
+        console.log({val: result[0]})
+        res.status(201).json(responseObj);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Failed to process prediction" });
