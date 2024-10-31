@@ -1,8 +1,8 @@
 import tfjs from "@tensorflow/tfjs-node";
 
-export const loadModel = () => {
+export const loadModel = async () => {
     const modelPath = "file:///home/ujus/Desktop/dev-dicoding/backend-gcloud-last/src/models/model.json";
-    const model = tfjs.loadLayersModel(modelPath);
+    const model = await tfjs.loadLayersModel(modelPath);
     return model;
 }
 
